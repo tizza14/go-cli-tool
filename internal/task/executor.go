@@ -93,7 +93,7 @@ func (e *Executor) ExecuteAll(ctx context.Context) error {
 
 		// Execute task with retry
 		result := e.executeWithRetry(ctx, task)
-		
+
 		e.mu.Lock()
 		e.results[taskID] = result
 		e.mu.Unlock()
@@ -118,7 +118,7 @@ func (e *Executor) ExecuteTask(ctx context.Context, taskID string) (*TaskResult,
 	}
 
 	result := e.executeWithRetry(ctx, task)
-	
+
 	e.mu.Lock()
 	e.results[taskID] = result
 	e.mu.Unlock()
@@ -133,7 +133,7 @@ func (e *Executor) executeWithRetry(ctx context.Context, task *Task) *TaskResult
 
 	for attempt := 1; attempt <= maxAttempts; attempt++ {
 		if e.verbose {
-			fmt.Printf("[%s] Executing task %s (attempt %d/%d)...\n", 
+			fmt.Printf("[%s] Executing task %s (attempt %d/%d)...\n",
 				time.Now().Format("15:04:05"), task.Name, attempt, maxAttempts)
 		}
 
@@ -141,7 +141,7 @@ func (e *Executor) executeWithRetry(ctx context.Context, task *Task) *TaskResult
 
 		if result.Success {
 			if e.verbose {
-				fmt.Printf("[%s] Task %s completed successfully (%.2fs)\n", 
+				fmt.Printf("[%s] Task %s completed successfully (%.2fs)\n",
 					time.Now().Format("15:04:05"), task.Name, result.Duration.Seconds())
 			}
 			return result
@@ -149,7 +149,7 @@ func (e *Executor) executeWithRetry(ctx context.Context, task *Task) *TaskResult
 
 		if attempt < maxAttempts {
 			if e.verbose {
-				fmt.Printf("[%s] Task %s failed, retrying... (%v)\n", 
+				fmt.Printf("[%s] Task %s failed, retrying... (%v)\n",
 					time.Now().Format("15:04:05"), task.Name, result.Error)
 			}
 			time.Sleep(time.Second * 2) // Wait before retry
@@ -157,7 +157,7 @@ func (e *Executor) executeWithRetry(ctx context.Context, task *Task) *TaskResult
 	}
 
 	if e.verbose {
-		fmt.Printf("[%s] Task %s failed after %d attempts\n", 
+		fmt.Printf("[%s] Task %s failed after %d attempts\n",
 			time.Now().Format("15:04:05"), task.Name, maxAttempts)
 	}
 

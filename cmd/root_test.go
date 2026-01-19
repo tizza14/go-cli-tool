@@ -28,7 +28,7 @@ func TestRootCommandWithVersion(t *testing.T) {
 
 	err := rootCmd.Execute()
 	assert.NoError(t, err)
-	
+
 	output := buf.String()
 	assert.Contains(t, output, "1.0.0")
 }
@@ -42,7 +42,7 @@ func TestRootCommandWithHelp(t *testing.T) {
 
 	err := rootCmd.Execute()
 	assert.NoError(t, err)
-	
+
 	output := buf.String()
 	assert.Contains(t, output, "A powerful CLI tool built with Go")
 	assert.Contains(t, output, "Available Commands")

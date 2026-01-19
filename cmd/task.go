@@ -26,7 +26,7 @@ var taskCmd = &cobra.Command{
 	Use:   "task",
 	Short: "Execute automation tasks",
 	Long: `Execute automation tasks defined in a configuration file.
-	
+
 The task command allows you to run automated tasks such as:
 - Running shell commands
 - Executing scripts
@@ -36,13 +36,13 @@ The task command allows you to run automated tasks such as:
 Tasks can have dependencies, retry logic, and timeouts.`,
 	Example: `  # Execute all tasks from a config file
   go-cli-tool task run --file tasks.yaml
-  
+
   # Execute a specific task
   go-cli-tool task run --file tasks.yaml --id my-task
-  
+
   # List all tasks in a config file
   go-cli-tool task list --file tasks.yaml
-  
+
   # Validate task configuration
   go-cli-tool task validate --file tasks.yaml`,
 }
@@ -85,12 +85,12 @@ func init() {
 
 	// Flags for task command
 	taskCmd.PersistentFlags().StringVarP(&taskFile, "file", "f", "tasks.yaml", "task configuration file")
-	
+
 	// Flags for run command
 	taskRunCmd.Flags().StringVar(&taskID, "id", "", "run specific task by ID")
 	taskRunCmd.Flags().IntVarP(&concurrency, "concurrency", "c", 1, "number of concurrent tasks")
 	taskRunCmd.Flags().BoolVar(&noColor, "no-color", false, "disable colored output")
-	
+
 	// Flags for init command
 	taskInitCmd.Flags().BoolVar(&taskList, "example", false, "create file with example tasks")
 }
@@ -115,7 +115,7 @@ func runTasks(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("failed to add tasks: %w", err)
 	}
 
-	fmt.Printf("📋 Loaded %d task(s) from %s\n\n", len(config.Tasks), taskFile)
+	fmt.Printf("?? Loaded %d task(s) from %s\n\n", len(config.Tasks), taskFile)
 
 	// Execute tasks
 	ctx := context.Background()
@@ -124,11 +124,11 @@ func runTasks(cmd *cobra.Command, args []string) error {
 	var execErr error
 	if taskID != "" {
 		// Execute specific task
-		fmt.Printf("▶️  Executing task: %s\n\n", taskID)
+		fmt.Printf("?��?  Executing task: %s\n\n", taskID)
 		_, execErr = executor.ExecuteTask(ctx, taskID)
 	} else {
 		// Execute all tasks
-		fmt.Println("▶️  Executing all tasks...")
+		fmt.Println("?��?  Executing all tasks...")
 		execErr = executor.ExecuteAll(ctx)
 	}
 
@@ -136,7 +136,7 @@ func runTasks(cmd *cobra.Command, args []string) error {
 
 	// Display results
 	fmt.Println("\n" + strings.Repeat("=", 60))
-	fmt.Println("📊 Execution Summary")
+	fmt.Println("?? Execution Summary")
 	fmt.Println(strings.Repeat("=", 60))
 
 	results := executor.GetResults()
@@ -148,10 +148,10 @@ func runTasks(cmd *cobra.Command, args []string) error {
 	fmt.Fprintln(w, "-------\t------\t--------\t-------")
 
 	for id, result := range results {
-		status := "✅ Success"
+		status := "??Success"
 		message := "Completed"
 		if !result.Success {
-			status = "❌ Failed"
+			status = "??Failed"
 			failCount++
 			if result.Error != nil {
 				message = result.Error.Error()
@@ -165,12 +165,12 @@ func runTasks(cmd *cobra.Command, args []string) error {
 	}
 	w.Flush()
 
-	fmt.Printf("\n⏱️  Total Duration: %.2fs\n", duration.Seconds())
-	fmt.Printf("✅ Success: %d\n", successCount)
-	fmt.Printf("❌ Failed: %d\n", failCount)
+	fmt.Printf("\n?��?  Total Duration: %.2fs\n", duration.Seconds())
+	fmt.Printf("??Success: %d\n", successCount)
+	fmt.Printf("??Failed: %d\n", failCount)
 
 	if execErr != nil {
-		return fmt.Errorf("\n⚠️  Execution completed with errors: %w", execErr)
+		return fmt.Errorf("\n?��?  Execution completed with errors: %w", execErr)
 	}
 
 	return nil
@@ -182,7 +182,7 @@ func listTasks(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("failed to load config: %w", err)
 	}
 
-	fmt.Printf("📋 Tasks in %s:\n\n", taskFile)
+	fmt.Printf("?? Tasks in %s:\n\n", taskFile)
 
 	w := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0)
 	fmt.Fprintln(w, "ID\tName\tType\tCommand\tDependencies")
@@ -204,14 +204,14 @@ func listTasks(cmd *cobra.Command, args []string) error {
 func validateTasks(cmd *cobra.Command, args []string) error {
 	config, err := task.LoadConfig(taskFile)
 	if err != nil {
-		return fmt.Errorf("❌ Failed to load config: %w", err)
+		return fmt.Errorf("??Failed to load config: %w", err)
 	}
 
 	if err := config.Validate(); err != nil {
-		return fmt.Errorf("❌ Invalid config: %w", err)
+		return fmt.Errorf("??Invalid config: %w", err)
 	}
 
-	fmt.Printf("✅ Configuration file '%s' is valid!\n", taskFile)
+	fmt.Printf("??Configuration file '%s' is valid!\n", taskFile)
 	fmt.Printf("   Version: %s\n", config.Version)
 	fmt.Printf("   Tasks: %d\n", len(config.Tasks))
 	return nil
@@ -275,7 +275,7 @@ func initTaskConfig(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("failed to create config: %w", err)
 	}
 
-	fmt.Printf("✅ Created task configuration file: %s\n", taskFile)
+	fmt.Printf("??Created task configuration file: %s\n", taskFile)
 	if taskList {
 		fmt.Println("   Generated with example tasks")
 	}
