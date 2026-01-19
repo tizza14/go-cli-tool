@@ -10,9 +10,9 @@ import (
 
 // Config represents the task configuration file
 type Config struct {
-	Version string          `yaml:"version"`
-	Tasks   []*Task         `yaml:"tasks"`
-	Defaults TaskDefaults   `yaml:"defaults"`
+	Version  string       `yaml:"version"`
+	Tasks    []*Task      `yaml:"tasks"`
+	Defaults TaskDefaults `yaml:"defaults"`
 }
 
 // TaskDefaults contains default values for tasks

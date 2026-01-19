@@ -52,12 +52,12 @@ type Task struct {
 
 // TaskResult represents the result of task execution
 type TaskResult struct {
-	Task      *Task
-	Success   bool
-	Output    string
-	Error     error
-	Duration  time.Duration
-	ExitCode  int
+	Task     *Task
+	Success  bool
+	Output   string
+	Error    error
+	Duration time.Duration
+	ExitCode int
 }
 
 // Execute runs the task

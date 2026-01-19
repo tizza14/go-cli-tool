@@ -14,11 +14,11 @@ import (
 )
 
 var (
-	taskFile     string
-	taskID       string
-	taskList     bool
-	concurrency  int
-	noColor      bool
+	taskFile    string
+	taskID      string
+	taskList    bool
+	concurrency int
+	noColor     bool
 )
 
 // taskCmd represents the task command
@@ -286,4 +286,3 @@ func initTaskConfig(cmd *cobra.Command, args []string) error {
 
 	return nil
 }
-
