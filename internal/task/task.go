@@ -41,7 +41,7 @@ type Task struct {
 	Timeout     time.Duration     `yaml:"timeout" json:"timeout"`
 	RetryCount  int               `yaml:"retry_count" json:"retry_count"`
 	DependsOn   []string          `yaml:"depends_on" json:"depends_on"`
-	
+
 	// Runtime fields
 	Status    TaskStatus `yaml:"-" json:"status"`
 	StartTime time.Time  `yaml:"-" json:"start_time"`
@@ -100,7 +100,7 @@ func (t *Task) Execute(ctx context.Context) *TaskResult {
 // executeCommand executes a shell command
 func (t *Task) executeCommand(ctx context.Context, result *TaskResult) *TaskResult {
 	var cmd *exec.Cmd
-	
+
 	// Combine command and args
 	if len(t.Args) > 0 {
 		// #nosec G204 -- Command and args are from user-controlled task configuration files
