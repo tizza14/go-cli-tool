@@ -103,6 +103,7 @@ func (t *Task) executeCommand(ctx context.Context, result *TaskResult) *TaskResu
 	
 	// Combine command and args
 	if len(t.Args) > 0 {
+		// #nosec G204 -- Command and args are from user-controlled task configuration files
 		cmd = exec.CommandContext(ctx, t.Command, t.Args...)
 	} else {
 		// Parse command string
@@ -113,6 +114,7 @@ func (t *Task) executeCommand(ctx context.Context, result *TaskResult) *TaskResu
 			t.Error = result.Error.Error()
 			return result
 		}
+		// #nosec G204 -- Command is from user-controlled task configuration files
 		cmd = exec.CommandContext(ctx, parts[0], parts[1:]...)
 	}
 

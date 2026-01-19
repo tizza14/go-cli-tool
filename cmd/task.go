@@ -128,7 +128,7 @@ func runTasks(cmd *cobra.Command, args []string) error {
 		_, execErr = executor.ExecuteTask(ctx, taskID)
 	} else {
 		// Execute all tasks
-		fmt.Println("▶️  Executing all tasks...\n")
+		fmt.Println("▶️  Executing all tasks...")
 		execErr = executor.ExecuteAll(ctx)
 	}
 
