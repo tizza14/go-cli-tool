@@ -1,0 +1,140 @@
+version: "1.0"
+
+# Default settings for all tasks
+defaults:
+  timeout: 30s
+  retry_count: 1
+  workdir: "."
+
+# Task definitions
+tasks:
+  # Basic command examples
+  - id: hello
+    name: "Hello World"
+    description: "Print a greeting message"
+    type: command
+    command: powershell
+    args:
+      - "-Command"
+      - "Write-Host 'Hello from Task Automation!'"
+
+  - id: check-date
+    name: "Check Date"
+    description: "Display current date and time"
+    type: command
+    command: powershell
+    args:
+      - "-Command"
+      - "Get-Date -Format 'yyyy-MM-dd HH:mm:ss'"
+
+  - id: system-info
+    name: "System Information"
+    description: "Display system information"
+    type: command
+    command: powershell
+    args:
+      - "-Command"
+      - "Get-ComputerInfo | Select-Object CsName, OsName, OsVersion"
+    timeout: 10s
+
+  # File operations
+  - id: create-temp-dir
+    name: "Create Temp Directory"
+    description: "Create a temporary directory for processing"
+    type: command
+    command: powershell
+    args:
+      - "-Command"
+      - "New-Item -ItemType Directory -Path './temp' -Force"
+
+  - id: list-files
+    name: "List Files"
+    description: "List files in current directory"
+    type: command
+    command: dir
+    depends_on:
+      - create-temp-dir
+
+  - id: cleanup
+    name: "Cleanup Temp Files"
+    description: "Remove temporary directory"
+    type: command
+    command: powershell
+    args:
+      - "-Command"
+      - "Remove-Item -Path './temp' -Recurse -Force -ErrorAction SilentlyContinue"
+    depends_on:
+      - list-files
+
+  # Build and test example (for Go projects)
+  - id: go-fmt
+    name: "Format Go Code"
+    description: "Format all Go source files"
+    type: command
+    command: go
+    args:
+      - fmt
+      - ./...
+    timeout: 60s
+
+  - id: go-vet
+    name: "Vet Go Code"
+    description: "Run go vet to find potential issues"
+    type: command
+    command: go
+    args:
+      - vet
+      - ./...
+    depends_on:
+      - go-fmt
+    timeout: 60s
+
+  - id: go-test
+    name: "Run Tests"
+    description: "Run all unit tests"
+    type: command
+    command: go
+    args:
+      - test
+      - ./...
+      - -v
+    depends_on:
+      - go-vet
+    timeout: 300s
+    retry_count: 2
+
+  - id: go-build
+    name: "Build Application"
+    description: "Build the Go application"
+    type: command
+    command: go
+    args:
+      - build
+      - -o
+      - go-cli-tool.exe
+      - .
+    depends_on:
+      - go-test
+    timeout: 120s
+
+  # Git operations example
+  - id: git-status
+    name: "Git Status"
+    description: "Check git repository status"
+    type: command
+    command: git
+    args:
+      - status
+      - --short
+
+  # Network operations example
+  - id: ping-test
+    name: "Ping Test"
+    description: "Test network connectivity"
+    type: command
+    command: ping
+    args:
+      - 127.0.0.1
+      - -n
+      - "4"
+    timeout: 10s

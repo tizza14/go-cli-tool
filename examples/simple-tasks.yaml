@@ -1,0 +1,36 @@
+version: "1.0"
+
+defaults:
+  timeout: 30s
+
+tasks:
+  - id: hello
+    name: "Hello Task"
+    description: "Simple greeting"
+    type: command
+    command: powershell
+    args:
+      - "-Command"
+      - "Write-Host 'Task automation is working!'"
+
+  - id: show-date
+    name: "Show Current Time"
+    description: "Display current date and time"
+    type: command
+    command: powershell
+    args:
+      - "-Command"
+      - "Get-Date"
+    depends_on:
+      - hello
+
+  - id: complete
+    name: "Completion Message"
+    description: "Show completion message"
+    type: command
+    command: powershell
+    args:
+      - "-Command"
+      - "Write-Host 'All tasks completed successfully!' -ForegroundColor Green"
+    depends_on:
+      - show-date

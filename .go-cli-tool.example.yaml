@@ -1,0 +1,8 @@
+# Example configuration file for go-cli-tool
+# Copy this file to ~/.go-cli-tool.yaml and customize as needed
+
+# Enable verbose output
+verbose: false
+
+# Custom configuration values can be added here
+# and accessed via viper in your commands

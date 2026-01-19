@@ -1,0 +1,35 @@
+version: "1.0"
+
+defaults:
+  timeout: 30s
+  retry_count: 0
+
+tasks:
+  - id: hello
+    name: Hello World
+    description: Print a simple greeting
+    type: command
+    command: powershell
+    args:
+      - "-Command"
+      - "Write-Host 'Hello from automation!' -ForegroundColor Cyan"
+
+  - id: date
+    name: Show Date
+    description: Display current date and time
+    type: command
+    command: powershell
+    args:
+      - "-Command"
+      - "Get-Date -Format 'yyyy-MM-dd HH:mm:ss'"
+
+  - id: list-files
+    name: List Files
+    description: List files in current directory
+    type: command
+    command: powershell
+    args:
+      - "-Command"
+      - "Get-ChildItem -Name | Select-Object -First 10"
+    depends_on:
+      - hello

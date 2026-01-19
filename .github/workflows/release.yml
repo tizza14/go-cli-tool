@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.22'
+
+    - name: Run tests
+      run: go test ./... -v
+
+    - name: Build for multiple platforms
+      run: |
+        # Linux
+        GOOS=linux GOARCH=amd64 go build -o go-cli-tool-linux-amd64 .
+        GOOS=linux GOARCH=arm64 go build -o go-cli-tool-linux-arm64 .
+        
+        # macOS
+        GOOS=darwin GOARCH=amd64 go build -o go-cli-tool-darwin-amd64 .
+        GOOS=darwin GOARCH=arm64 go build -o go-cli-tool-darwin-arm64 .
+        
+        # Windows
+        GOOS=windows GOARCH=amd64 go build -o go-cli-tool-windows-amd64.exe .
+
+    - name: Create checksums
+      run: |
+        sha256sum go-cli-tool-* > checksums.txt
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          go-cli-tool-linux-amd64
+          go-cli-tool-linux-arm64
+          go-cli-tool-darwin-amd64
+          go-cli-tool-darwin-arm64
+          go-cli-tool-windows-amd64.exe
+          checksums.txt
+        draft: false
+        prerelease: false
+        generate_release_notes: true
